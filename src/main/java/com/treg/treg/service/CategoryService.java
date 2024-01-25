@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -34,10 +35,37 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Pair<List<Response.ListApi>, Error> list() {
+    /**
+     * list method is responsible for fetching the available categories with pagination
+     * @param page is the page number
+     * @param size is max number of records fetched (value of size is in the range 0 to 10)
+     * @return returns the available categories from database
+     */
+    public Pair<List<Response.ListApi>, Error> list(int page, int size) {
         List<Response.ListApi> response = new LinkedList<>();
-        for (Category e : categoryRepository.findAll()) {
-            response.add(new Response.ListApi(e.getId(), e.getName()));
+        try {
+            if (size < 0 || size > 10) {
+                logger.debug("setting size to 10");
+                size = 10;
+            }
+
+            // fetching categories from database
+            PageRequest pr = PageRequest.of(page, size);
+
+            for (Category e : categoryRepository.findAll(pr).getContent()) {
+                response.add(new Response.ListApi(
+                        e.getId(),
+                        e.getName()
+                ));
+            }
+        } catch (Exception e) {
+            logger.error(String.format("fetching of categories failed with err %s", e));
+            return new Pair<>(
+                    null,
+                    new Error(
+                            "failed to fetch categories, try again later",
+                            HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+                    ));
         }
 
         return new Pair<>(response, null);

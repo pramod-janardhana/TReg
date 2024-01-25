@@ -33,12 +33,14 @@ public class AccountController {
 
     /**
      * list method is responsible for accepting the request to fetch all available account
+     * @param page is the page number
+     * @param size is max number of records fetched (value of size is in the range 0 to 10)
      * @param response is http response class
      * @return returns all the available account from database
      */
     @GetMapping
-    public ServerResponse<List<Response.ListApi>> list(HttpServletResponse response) {
-        Pair<List<Response.ListApi>, Error> res = accountService.list();
+    public ServerResponse<List<Response.ListApi>> list(@RequestParam int page, @RequestParam int size,HttpServletResponse response) {
+        Pair<List<Response.ListApi>, Error> res = accountService.list(page, size);
         if (res.getSecond() != null) {
             response.setStatus(res.getSecond().getStatusCode());
             return new ServerResponse<>(false, null, res.getSecond().getErrMsg());
