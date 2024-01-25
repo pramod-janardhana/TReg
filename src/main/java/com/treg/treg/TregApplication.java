@@ -9,6 +9,7 @@ import com.treg.treg.database.repository.TransactionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
@@ -17,39 +18,12 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 
 @SpringBootApplication
+@EnableCaching
 public class TregApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TregApplication.class, args);
 	}
-
-//	@Bean
-//	public Docket swaggerConfigs() {
-//		return new Docket(DocumentationType.SWAGGER_2)
-//				.select()
-//				.apis(RequestHandlerSelectors.basePackage("com.treg.treg"))
-//				.paths(PathSelectors.regex("/api/v1/*"))
-//				.build()
-//				.useDefaultResponseMessages(false)
-//				.apiInfo(apiInfo());
-//	}
-
-//	private ApiInfo apiInfo() {
-//		return new ApiInfo(
-//				"TReg a Transaction registry application",
-//				"TReg API documentation",
-//				"1.0",
-//				"TReg Service Terms",
-//				new Contact(
-//						"Pramod J",
-//						"https://pramod-janardhana.github.io/portfolio/",
-//						"pramod.athreya.0098@gmail.com"
-//				),
-//				"Apache License 2.0",
-//				"https://github.com/pramod-janardhana/treg",
-//				Collections.emptyList()
-//		);
-//	}
 
 	@Bean
 	CommandLineRunner commandLineRunner(AccountRepository accountRepository,

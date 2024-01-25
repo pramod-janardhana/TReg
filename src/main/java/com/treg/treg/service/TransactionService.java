@@ -21,6 +21,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -140,6 +141,7 @@ public class TransactionService {
      * @param request contains the details of the account
      * @return returns true if transaction was added successfully
      */
+    @CacheEvict(value = "report", allEntries = true)
     public Pair<Response.RecordApi, Error> record(Request.RecordApi request) {
         logger.info("Creating new transaction");
         logger.debug(String.format("Transaction details %s", request));

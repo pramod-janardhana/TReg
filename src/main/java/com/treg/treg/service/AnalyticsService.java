@@ -18,12 +18,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Timer;
+
+import static java.lang.Thread.sleep;
 
 /**
  * AnalyticsService is responsible for handling the business logic related to Analytics
@@ -64,8 +69,10 @@ public class AnalyticsService {
      * @param accountId is the id of the account
      * @return returns the transaction summary as report
      */
+    @Cacheable(value = "report")
     public Pair<Response.ReportApi, Error> report(Long accountId, int of) {
         try {
+            sleep(1000);
             Account account = null;
             Response.ReportApi.Report report = null;
             Response.ReportApi.Report.LineItem incomeLineItem = new Response.ReportApi.Report.LineItem();
